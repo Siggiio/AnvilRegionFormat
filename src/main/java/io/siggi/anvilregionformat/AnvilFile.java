@@ -156,16 +156,6 @@ class AnvilFile implements Closeable {
                 setUsed(oldSector, oldSize, false);
             }
             setUsed(newSector, newSize, true);
-            raf.seek(4 * offset);
-            raf.write((newSector >> 16) & 0xff);
-            raf.write((newSector >> 8) & 0xff);
-            raf.write(newSector & 0xff);
-            raf.write(newSize);
-            raf.seek((4 * offset) + 4096);
-            raf.writeInt(data.editTime);
-            offsets[offset] = newSector;
-            sizes[offset] = newSize;
-            editTimes[offset] = data.editTime;
             long writeTo = ((long) newSector) * 4096L;
             if (raf.length() < writeTo)
                 raf.setLength(writeTo);
@@ -188,6 +178,16 @@ class AnvilFile implements Closeable {
                 long newLength = currentLength + (4096L - mod4096);
                 raf.setLength(newLength);
             }
+            raf.seek(4 * offset);
+            raf.write((newSector >> 16) & 0xff);
+            raf.write((newSector >> 8) & 0xff);
+            raf.write(newSector & 0xff);
+            raf.write(newSize);
+            raf.seek((4 * offset) + 4096);
+            raf.writeInt(data.editTime);
+            offsets[offset] = newSector;
+            sizes[offset] = newSize;
+            editTimes[offset] = data.editTime;
         }
     }
 
